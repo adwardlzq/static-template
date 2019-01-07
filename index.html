@@ -1,12 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Static Template</title>
+    <link href="https://static.360buyimg.com/pops/xstoreom/fresh/styles/fresh.min.css?version=201807041955"rel="stylesheet"/>
+    <script src="https://static.360buyimg.com/pops/xstoreom/plugins/vue/vue.min.js?version=201807041955"></script>
+    <script src="https://static.360buyimg.com/pops/xstoreom/plugins/vueRouter/vue-router.min.js?version=201807041955"></script>
+    <script src="https://static.360buyimg.com/pops/xstoreom/fresh/fresh.min.js?version=201807041955"></script>
+    <script src="https://pops.oss-cn-beijing.aliyuncs.com/pops/popdesign_x/js/fresh-x.min.js"></script>
+    <script src="https://pops.oss-cn-beijing.aliyuncs.com/pops/xstoreom/plugins/mock/mock-min.js"></script>
+    <!-- <script src="https://static.360buyimg.com/pops/xstoreom/plugins/vueResource/vue-resource.min.js?version=201807041955"></script> -->
+	  <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1">
+	</script>
+    <style>
+      body{
+        padding:20px
+        
+      }
+    </style>
   </head>
   <body>
-    <h1>This is a static template, there is no bundler or bundling involved!</h1>
+    <template id="list" style="display:none">
+      <p-form v-ref:search label-position="right" :label-width="97" @on-form-submit="search(null)">
+        <p-row :gutter="10">
+          <p-col span="8">
+            <p-form-item label="门店编号：">
+              <p-input :value.sync="query.storeId" placeholder="请输入门店编号" :maxlength="20" icon="ios-close-empty" @on-click="query.storeId=''"></p-input>
+            </p-form-item>
+          </p-col>
+          <p-col span="8">
+            <p-form-item label="门店名称：">
+              <p-input :value.sync="query.storeName" placeholder="请输入门店名称" :maxlength="20" icon="ios-close-empty" @on-click="query.storeName=''"></p-input>
+            </p-form-item>
+          </p-col>
+          <p-col span="8">
+            <p-button type="primary" html-type="submit" icon="search">查询</p-button>
+            <p-button type="ghost" icon="ios-loop-strong" @click="resetSearch(null)">重置</p-button>
+          </p-col>
+        </p-row>
+      </p-form>
+      <p-table :content="self" :columns="columns" :data="page.content" @on-selection-change="select" stripe border highlight-row>
+        <p slot="header">
+          <p-button type="success" icon="android-add" @click="addStore">新增门店</p-button>
+        </p>
+        <p slot="footer">
+          <p-page :total="page.totalElements" @on-change="search" @on-page-size-change="search(1)" :current.sync="query.page" :page-size.sync="query.pageSize"
+          :page-size-opts="[10,50,100]"></p-page>
+        </p>
+      </p-table>
+      <p-modal :visible.sync="view.modal" :title="view.title">
+        <x-select-time :data="view.ary" :value.sync="view.result"></x-select-time>
+        <p slot="footer">
+          <p-button @click="view.modal=false">关闭</p-button>
+        </p>
+      </p-modal>
+    </template>
+    <div id="app">
+      <router-view></router-view>
+    </div>
+    <script src="js/api.js"></script>
+	  <script src="mock/mockData.js"></script> 
+    <!-- 在项目中请把mock/mockData.js这个js删掉 -->
+    <script src="js/components.js"></script>
+    <script src="js/router.js"></script>
   </body>
 </html>
